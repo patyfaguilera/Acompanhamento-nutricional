@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><script src="https://myhub.ia.br/canvas-vendor/tailwind.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Aileron', Helvetica, Arial, sans-serif;
+    background: #ffffff;
+    color: #662e39;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 32px 22px 56px; }
+
+  /* Capa */
+  #capa { text-align: center; }
+  #capa img {
+    width: 240px; height: 300px; object-fit: cover;
+    border-radius: 18px; margin: 0 auto 24px; display: block;
+  }
+  .selo {
+    display: inline-block; background: #662e39; color: #ffffff;
+    padding: 8px 16px; border-radius: 999px; font-size: 12px;
+    font-weight: 700; letter-spacing: 1px; margin-bottom: 18px;
+  }
+  #capa h1 { font-size: 34px; line-height: 1.15; margin: 0 0 14px; font-weight: 900; }
+  #capa .sub { font-size: 18px; font-style: italic; margin: 0 0 14px; }
+  #capa .texto { margin: 0 auto 28px; max-width: 540px; }
+
+  .btn {
+    background: #662e39; color: #ffffff; border: none;
+    border-radius: 999px; padding: 14px 28px; font-family: inherit;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+  }
+  .btn:hover { opacity: .9; }
+  .btn-sec {
+    background: #ffffff; color: #662e39; border: 2px solid #662e39;
+    border-radius: 999px; padding: 10px 20px; font-family: inherit;
+    font-weight: 700; cursor: pointer;
+  }
+  .btn-sec:hover { background: #f6f4b5; }
+  .btn-sec:disabled { opacity: .3; cursor: default; background: #ffffff; }
+
+  /* Visualizador */
+  #viewer { display: none; }
+  .topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px; }
+  .contador { font-size: 13px; font-weight: 700; }
+  .barra { height: 8px; background: #f6f4b5; border-radius: 999px; overflow: hidden; margin-bottom: 24px; }
+  .barra div { height: 100%; background: #662e39; transition: width .3s; }
+
+  .etapa-titulo {
+    background: #662e39; color: #ffffff; border-radius: 18px;
+    padding: 24px 26px; margin-bottom: 22px;
+  }
+  .etapa-titulo .num { color: #f6f4b5; font-weight: 700; font-size: 14px; }
+  .etapa-titulo h2 { margin: 6px 0 8px; font-size: 26px; line-height: 1.2; font-weight: 900; }
+  .etapa-titulo p { margin: 0; font-style: italic; color: #f6f4b5; }
+
+  .corpo p { margin: 0 0 12px; }
+  .corpo ul { margin: 6px 0 16px; padding-left: 22px; }
+  .corpo li { margin-bottom: 6px; }
+  .destaque {
+    background: #f6f4b5; border-left: 6px solid #662e39;
+    border-radius: 12px; padding: 14px 18px; margin: 18px 0; font-weight: 700;
+  }
+
+  .plano {
+    border: 2px solid #662e39; border-radius: 16px; padding: 20px;
+    margin-bottom: 16px; background: #ffffff;
+  }
+  .plano.destaque-plano { background: #f6f4b5; }
+  .plano .tag {
+    display: inline-block; background: #662e39; color: #ffffff;
+    border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 700; margin-bottom: 10px;
+  }
+  .plano h3 { margin: 0 0 6px; font-size: 19px; font-weight: 800; }
+  .plano p { margin: 0 0 10px; }
+  .valor { font-size: 22px; font-weight: 900; margin-top: 6px; }
+
+  .navegacao { display: flex; justify-content: space-between; gap: 12px; margin-top: 30px; border-top: 2px solid #f6f4b5; padding-top: 18px; }
+  .fim { text-align: center; margin-top: 30px; }
+  .fim p { margin: 0 0 16px; font-size: 18px; font-weight: 700; }
+
+  @media (max-width: 560px) {
+    #capa h1 { font-size: 28px; }
+    .etapa-titulo h2 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section id="capa">
+    <img src="https://d31zra5bs5df64.cloudfront.net/prod/3F2zAAtKbcKWNYSQtm8QyKRYL1r/chat/3LYOkZZ0LQ5G6Qmx6S4b8u10cgg/3LgvpdbwPPev61EJyBmYcQkSOSa.png?Expires=1793892309&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=fSiYL8S4WE0MVxKI7mhX2bdbEcyqsYU29cjntpnpwrJYIPdXAyd0yc3sZX96dRMk1twVuCqRAilF~-tgtXXSt67K4GqAn7SJG12dWNXeI9qWELd83dLlM3YQVNp2WedcVfCbouvB17NxoDfVExPr1D0QvBJuDkx-gWJnLNv~NVfGGO7hBFWWgFiJu2WH59cLhxaNyoM2uHwJkpfFyfoNLouCZg5rcf64duW5T8z6SBOzdZiciGsuGrjXEDZ77aAGqdbKH8IaOE5RcH9zktmIbV1eAUW0b3ui6Qfg1nQpdBzBbBZoQwU0bkv6lPZEyoIg4iBejJLJIjeRyprcbdRpBw__" alt="Patricia Aguilera">
+    <span class="selo">PATRÍCIA AGUILERA | NUTRI DE MULHERES COM TAG</span>
+    <h1>Como será sua experiência dentro do meu acompanhamento?</h1>
+    <p class="texto sub">Um espaço para cuidar da sua alimentação respeitando sua rotina, sua ansiedade e o momento que você está vivendo.</p>
+    <button class="btn" id="btn-abrir">Conhecer minha experiência</button>
+  </section>
+
+  <section id="viewer">
+    <div class="topo">
+      <span class="contador" id="contador"></span>
+      <button class="btn-sec" id="btn-inicio">Início</button>
+    </div>
+    <div class="barra"><div id="progresso"></div></div>
+    <div id="conteudo"></div>
+    <div class="navegacao">
+      <button class="btn-sec" id="btn-anterior">← Anterior</button>
+      <button class="btn-sec" id="btn-proximo">Próximo →</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const etapas = [
+  {
+    titulo: "Como será sua experiência dentro do meu acompanhamento?",
+    resumo: "",
+    html: `<img src="https://d31zra5bs5df64.cloudfront.net/prod/3F2zAAtKbcKWNYSQtm8QyKRYL1r/chat/3LYOkZZ0LQ5G6Qmx6S4b8u10cgg/3LgzCKdUOkkSC6LjSvpSEjDZe8U.png?Expires=1793893969&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=J790vs4gvfLAygmTFVyaVb7fG5FX2nivQtCJMGZReRksVlxqZ-zGVmd9N5nDkBa9TXBjYfQsdlYg7ZGMXQHh~8B68x8KDDcmU6jNKeKhQDMh33ZLW7tSPo0z4E2-SBrzsSKkZMmcTa25PQvQha9ekz0xX1VU782D54KeWLHkk612cwsHdWeUuamLHL3biRwoERZ-rZYHxgxFw-KQNn3fCJMqrdFc~Fnmf6i5H6VctFHVwuJUKl6qlPYkYXynskOsnvi1TFXiO370CjMQ936CJ1dY~JFdJ3SV0Xo8XksWXNoSerZkHnF6YzC1DBtVjp4kQsPfVyDKLYP9Rzp0t8wmRQ__" alt="Print do aplicativo" style="width:100%;max-width:340px;display:block;margin:0 auto 24px;border-radius:18px;"><p>Um espaço para cuidar da sua alimentação respeitando sua rotina, sua ansiedade e o momento que você está vivendo.</p>`
+  },
+  {
+    titulo: "Suas orientações nutricionais",
+    resumo: "Tudo o que você precisa colocar em prática, no mesmo lugar.",
+    html: `
+      <div class="corpo">
+        <img src="https://d31zra5bs5df64.cloudfront.net/prod/3F2zAAtKbcKWNYSQtm8QyKRYL1r/chat/3LYOkZZ0LQ5G6Qmx6S4b8u10cgg/3Lgyx7wDIx4yOjalu8zBm798EWs.jpeg?Expires=1793893848&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=c1M7QK8KmpwNYWVnK3qoaK4e2UvNCB9vjj0aLWR6KUljsVgdD0xFYmJqr~DKeH6HKUGZBOczCnFq3mhrp7WAKfXzkGuaTCz~vRTQ-qSvxppWlUchxq12oZlCt1YYARzULT46ZhWBfrgdUDHkU11srzzZHGZQ1kZB0ig4~WWO1TNZUJGfmdQWQIdYPyFY-b2ilOgksKDD5QJs8VE7GdgS4XHEFaSt7DxZsa9soyFZDB4-kde3QSNW27~d1D7hIFZD~ahoqokgpdGCWrk-URjEM-TNldi4TMkwkCGYSoPxxjEcQe2k8v4TkmbwFATIIQlZmyTY6eiFFFjcpItlrf4Saw__" alt="Orientações nutricionais" style="width:100%;max-width:340px;display:block;margin:0 auto 24px;border-radius:18px;"><p>Aqui ficam suas orientações nutricionais e atividades personalizadas, que vamos construindo ao longo do acompanhamento.</p>
+        <p>Você terá pequenas estratégias para trabalhar questões como:</p>
+        <ul>
+          <li>Enjoo e falta de apetite.</li>
+          <li>Refluxo e desconfortos gastrointestinais.</li>
+          <li>Alimentação em momentos de ansiedade.</li>
+          <li>Vontade de comer doces no final do dia.</li>
+          <li>Construção de uma rotina alimentar possível.</li>
+        </ul>
+      </div>`
+  },
+  {
+    titulo: "Seu diário alimentar",
+    resumo: "Um espaço para entender sua relação com a comida.",
+    html: `
+      <div class="corpo">
+        <img src="https://d31zra5bs5df64.cloudfront.net/prod/3F2zAAtKbcKWNYSQtm8QyKRYL1r/chat/3LYOkZZ0LQ5G6Qmx6S4b8u10cgg/3LgzaeVXjwPchpC2G8npbo3ygSe.jpg?Expires=1793894163&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=W3s5cGXJIdn0diwrKC7ExIHTXVOUi14DCfafahFOZAhtoZCbAhfwULk3veoZPjMtErJCRh~7Q~tdZr-pR3H6VznrF3QPkGfXT8190RhEaxlbkqhLIFVG1AIBD2tUb3LOBrgchV-5dkvnCvtLzyUj18Qh7jhxf1EPsjh4irmfLzK4f9m6BGDlRTHtm2xQJYZTjQfTkUFCSd1MjxQEkyQlxJVd8uhlgNwxiKpgVp~cNAfQwvUH33OPpFubNqH8cfJlx7jynvi4x5dSZVcUZiy4YiwuOjBUnODhwhAv2JWWhhAjo2I8jcTQt0L8qYCozLtdLUQywPWVXTOaTianbKeWxA__" alt="Diário alimentar e humor na refeição" style="width:100%;max-width:340px;display:block;margin:0 auto 24px;border-radius:18px;"><p>No diário alimentar, você poderá registrar suas refeições, compartilhar dificuldades e observar situações que influenciam sua alimentação.</p>
+        <div class="destaque">Não é para fiscalizar o que você come ou buscar uma alimentação perfeita, mas para identificar padrões e entender o que podemos melhorar juntas.</div>
+      </div>`
+  },
+  {
+    titulo: "Listas de redução de danos",
+    resumo: "Porque a vida real não acontece dentro de uma dieta.",
+    html: `
+      <div class="corpo">
+        <div style="display:flex;gap:12px;margin:0 0 24px;"><img src="https://d31zra5bs5df64.cloudfront.net/prod/3F2zAAtKbcKWNYSQtm8QyKRYL1r/chat/3LYOkZZ0LQ5G6Qmx6S4b8u10cgg/3LgzqRxPnhQ5dW9mjJvcdOqQGOs.png?Expires=1793894289&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=Fpy-tbrdSpoHxTFx3S8ic7k5WDFUow8FMLXEZls0ylTwWfPMVSRZM9b0LpoH6zWyaJPiEqzORsNPxaWQ6WysQsGJ3GzWKMWFVZ24s1WkYrVuULueUiQHtp4a9dT6-V~5w4CHp0eOVg7LRLWOSe~y3~GaPMQgmd5YVF0zTsGpyI5ax410v7rTRo2~e1Kb3xHmuScW9FCU4jEUim~NfOTb4BApEna-c~EskcHmwiX5CwhknEOmyZqFQOO88mnwcxeICizCIR42htFkzzKKH-wqSFqywR5Ltnot8i3Ah2E-WWfhc~AJXxtfz0UxArCTUNQv7beXVyObMkxm6-RA~83n0w__" alt="Listas de redução de danos por restaurante" style="width:50%;border-radius:18px;"><img src="https://d31zra5bs5df64.cloudfront.net/prod/3F2zAAtKbcKWNYSQtm8QyKRYL1r/chat/3LYOkZZ0LQ5G6Qmx6S4b8u10cgg/3LgzqXYA4SDtINFp7KPesgwwRPr.png?Expires=1793894289&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=pvZLkq5Y5drcPB2KhmQ~BWyMR6b0J3cYutqqpgucSDH5~5ACYpiav32~khV930GdyCLPCnrEI~jEXALrfoKj00Okv17O2c-FqW0GnVPD2~2kHCA-50~JUiKNzpXD-pavT4s3X0OtjZ3TaSRaa1YwPvXf-oXRvKCd13u0npto6nlJTruA2X00tGgE9fp-iPMqczWRTeDgh7kSb1~-fKJVE0CopkJE2q6Us568wY1FKbpQIQ59TCVyXTzGroLttVkOWd5Gca7aojzMv~zmVFASHhi11mX22-sFDNdvLEFjBoSKPeG0-w0UZpxU94MSJs8T1b31-dLSL4cbbJuVBi9oBg__" alt="Listas de redução de danos por situação" style="width:50%;border-radius:18px;"></div>
+<p>Você terá acesso às minhas listas de redução de danos, materiais com estratégias práticas para lidar com situações que podem dificultar sua alimentação.</p>
+        <p>Por exemplo:</p>
+        <ul>
+          <li>O que fazer quando estiver sem apetite.</li>
+          <li>Como lidar com refeições fora de casa.</li>
+          <li>Como aproveitar festas sem exageros por ansiedade ou restrições.</li>
+          <li>O que fazer quando a rotina sair do planejado.</li>
+        </ul>
+        <div class="destaque">A ideia é ter alternativas possíveis, sem precisar compensar, se culpar ou desistir quando algo sair diferente do esperado.</div>
+      </div>`
+  },
+  {
+    titulo: "Seu feedback semanal",
+    resumo: "Você não precisa esperar a próxima consulta para falar sobre suas dificuldades.",
+    html: `
+      <div class="corpo">
+        <img src="https://d31zra5bs5df64.cloudfront.net/prod/3F2zAAtKbcKWNYSQtm8QyKRYL1r/chat/3LYOkZZ0LQ5G6Qmx6S4b8u10cgg/3Lh01dQNFWJ2BxNxuIJpEMfleTM.png?Expires=1793894378&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=E~6pF4Jus~EoLpMiJ4SUI-YgxEQLlo~G1rklVfG0JAnpH9a5AwrbH7TYdZ7OgZ8fssZjbSBPIqXKfayCAT4240G6evI0Nr0qLrTzqJjTkpHk0SFzCtqNR1~CetwYOpIeVp0KJROnmYd4~u7h-5pSSmUooqi3Y64I2btiUWrfotfk6tCOuStP6crkfQJvcxbmw2LFtI78l5rN6Was2alLW91XjAYsqIVfb87tiA77HG7MLkgMNqx-4KAIl8-qMax6H2Z-Ty1z3Pqi0Y1cOkes8dWDA3YQQ71DuS4gn02wA0ndg6-JG2upKMGYqhn3A0xG9Y1Il67gFGLlEfKvn5c6Iw__" alt="Check-in semanal" style="width:100%;max-width:340px;display:block;margin:0 auto 24px;border-radius:18px;"><p>Toda semana, você terá um momento para me contar como foi sua alimentação, o que conseguiu colocar em prática, quais dificuldades apareceram e como está se sentindo.</p>
+        <p>Assim, consigo acompanhar sua evolução e ajustar as estratégias quando necessário.</p>
+      </div>`
+  },
+  {
+    titulo: "Suas consultas e acompanhamento",
+    resumo: "Não é só receber orientações. É ter acompanhamento para conseguir aplicá-las.",
+    html: `
+      <div class="corpo">
+        <p>Durante o período contratado, teremos consultas a cada 15 dias, conforme o plano escolhido.</p>
+        <p>Nelas, vamos avaliar sua evolução, conversar sobre suas dificuldades e adaptar as estratégias à sua realidade.</p>
+        <p>Nessas consultas, caso queira acompanhar a sua evolução física, vamos usar a ajuda da inteligência artificial junto com suas medidas de circunferências (que vou te ensinar a tirar) e fotos suas para estimar seu percentual de gordura e sua massa muscular. Assim conseguimos, além da parte comportamental, avaliar também seus resultados físicos.</p>
+        <img src="https://d31zra5bs5df64.cloudfront.net/prod/3F2zAAtKbcKWNYSQtm8QyKRYL1r/chat/3LYOkZZ0LQ5G6Qmx6S4b8u10cgg/3Lh0RhEuou4tiQNG8nahmeHdBbi.png?Expires=1793894585&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=Hl~fo6yqdkw02aetDSIni0sKur2HNZkGn7Nz4NNV5AWndG4civgTEjg4FObIM6-5bJTqawdqofkagED~7A05na2dHDwxhvmSq-uaNlr~73pE2hEX~VNPvYxhbRwAdNLyddk7jTLHE50JxwPGGhtkjrTEu5BmIcuHd02Z~8juqynZEYeN~Kf4SjSpZJL9~MMLcuALnWn1i4EihhWrWAEmg3GcYvus4MMHaap0JwPCYAsdMyJeb4yLqyXR4f2P7zXAl0x1xWLK5sRJ7OB31T99F1zqcfEtcQL1dcdFlcwdbxgQGsw1wetLEAkP~pS-xIycQfLPd~zVmTzd7Yd287hTFQ__" alt="Composição corporal e índices de avaliação" style="width:100%;max-width:520px;display:block;margin:18px auto 24px;border-radius:18px;">
+        <div class="destaque">Você terá um acompanhamento construído de acordo com suas necessidades, não um plano pronto que precisa seguir perfeitamente.</div>
+      </div>`
+  },
+  {
+    titulo: "O que você terá acesso",
+    resumo: "Tudo isso faz parte da sua experiência.",
+    html: `
+      <div class="corpo">
+        <ul>
+          <li>Consultas individuais.</li>
+          <li>Aplicativo com suas orientações personalizadas.</li>
+          <li>Diário alimentar.</li>
+          <li>Atividades práticas.</li>
+          <li>Listas de redução de danos.</li>
+          <li>Feedback semanal.</li>
+          <li>Ajustes e acompanhamento da sua evolução.</li>
+        </ul>
+        <p>Você terá acesso a um acompanhamento de verdade, em que vou te ajudar nas suas principais dificuldades e fazer sua alimentação e seu corpo não serem mais um motivo para sua ansiedade.</p>
+        <div class="destaque">O objetivo é que você desenvolva autonomia para cuidar da sua alimentação, mesmo nos dias em que a ansiedade estiver mais presente.</div>
+      </div>`
+  },
+  {
+    titulo: "Escolha seu plano",
+    resumo: "Escolha o tempo que deseja dedicar a esse processo.",
+    html: `
+      <div class="plano">
+        <h3>Plano mensal | Primeiro passo</h3>
+        <p>Para você que quer começar a cuidar da alimentação, entender suas dificuldades e dar os primeiros passos com acompanhamento.</p>
+        <div class="valor">R$ 447 à vista</div>
+        <p>no Pix ou boleto, ou 2x de R$ 231,83</p>
+      </div>
+      <div class="plano">
+        <h3>Plano bimestral | Construindo novos caminhos</h3>
+        <p>Para você que já reconhece o que precisa mudar e quer um período maior para desenvolver estratégias e começar a construir novos hábitos.</p>
+        <div class="valor">R$ 797 à vista</div>
+        <p>no Pix ou boleto, ou 3x de R$ 275,43</p>
+      </div>
+      <div class="plano destaque-plano">
+        <span class="tag">Minha recomendação</span>
+        <h3>Plano trimestral | Transformação com acolhimento</h3>
+        <p>Para você que quer ir além das mudanças iniciais. Teremos mais tempo para trabalhar sua relação com a comida, lidar com as dificuldades que a ansiedade traz para sua alimentação e construir hábitos que façam sentido na sua vida.</p>
+        <div class="valor">R$ 997 à vista</div>
+        <p>no Pix ou boleto, ou 4x de R$ 277,56</p>
+      </div>
+      <div class="corpo">
+        <p><strong>Por que eu escolheria o trimestral?</strong> Porque mudanças consistentes precisam de tempo. Assim, conseguimos identificar dificuldades, testar estratégias, fazer ajustes e acompanhar sua evolução sem pressa.</p>
+      </div>`
+  },
+  {
+    titulo: "Encerramento",
+    resumo: "Você não precisa continuar tentando resolver tudo sozinha.",
+    html: `
+      <div class="corpo">
+        <p>Se você sente que sua ansiedade interfere na alimentação, que seu estômago e intestino já não parecem funcionar como antes ou que está cansada de começar e parar, podemos trabalhar nisso juntas.</p>
+        <p>Meu acompanhamento é um espaço para construir uma relação mais tranquila com a comida, respeitando seu corpo e sua realidade.</p>
+        <p>A ideia é te ajudar a ter liberdade alimentar e que daqui um tempo você consiga seguir sozinha e não dependa mais de mim!</p>
+      </div>
+      <div class="fim">
+        <p>Vamos começar?</p>
+        <strong>Patricia Aguilera</strong><br>
+        Nutri de mulheres com TAG
+      </div>`
+  }
+];
+
+let atual = 0;
+
+function abrirViewer() {
+  document.getElementById('capa').style.display = 'none';
+  document.getElementById('viewer').style.display = 'block';
+  mostrar(0);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function voltarInicio() {
+  document.getElementById('viewer').style.display = 'none';
+  document.getElementById('capa').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function mostrar(i) {
+  atual = i;
+  const e = etapas[i];
+  const total = etapas.length;
+  document.getElementById('contador').textContent = `Etapa ${i + 1} de ${total}`;
+  document.getElementById('progresso').style.width = `${((i + 1) / total) * 100}%`;
+  document.getElementById('conteudo').innerHTML = `
+    <div class="etapa-titulo">
+      <span class="num">${String(i + 1).padStart(2, '0')}</span>
+      <h2>${e.titulo}</h2>
+      <p>${e.resumo}</p>
+    </div>
+    ${e.html}
+  `;
+  document.getElementById('btn-anterior').disabled = i === 0;
+  document.getElementById('btn-proximo').disabled = i === total - 1;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('btn-abrir').addEventListener('click', abrirViewer);
+document.getElementById('btn-inicio').addEventListener('click', voltarInicio);
+document.getElementById('btn-anterior').addEventListener('click', () => { if (atual > 0) mostrar(atual - 1); });
+document.getElementById('btn-proximo').addEventListener('click', () => { if (atual < etapas.length - 1) mostrar(atual + 1); });
+</script>
+</body>
+</html>
