@@ -17,7 +17,7 @@
 
   /* Capa */
   #capa { text-align: center; }
-  #capa img {
+  #capa .foto-capa {
     width: 240px; height: 300px; object-fit: cover;
     border-radius: 18px; margin: 0 auto 24px; display: block;
   }
@@ -67,6 +67,17 @@
     border-radius: 12px; padding: 14px 18px; margin: 18px 0; font-weight: 700;
   }
 
+  .imagem {
+    width: 100%; max-width: 340px; display: block;
+    margin: 0 auto 24px; border-radius: 18px;
+  }
+  .imagem-grande { max-width: 520px; margin: 18px auto 24px; }
+  .par-imagens {
+    display: flex; gap: 12px; justify-content: center;
+    flex-wrap: wrap; margin: 0 0 24px;
+  }
+  .par-imagens img { width: calc(50% - 6px); border-radius: 18px; }
+
   .plano {
     border: 2px solid #662e39; border-radius: 16px; padding: 20px;
     margin-bottom: 16px; background: #ffffff;
@@ -87,6 +98,7 @@
   @media (max-width: 560px) {
     #capa h1 { font-size: 28px; }
     .etapa-titulo h2 { font-size: 22px; }
+    .par-imagens img { width: 100%; }
   }
 </style>
 </head>
@@ -94,7 +106,7 @@
 <div class="wrap">
 
   <section id="capa">
-    <img src="https://raw.githubusercontent.com/patyfaguilera/Acompanhamento-nutricional/main/minha%20foto.png">
+    <img class="foto-capa" src="https://raw.githubusercontent.com/patyfaguilera/Acompanhamento-nutricional/main/minha%20foto.png" alt="Patricia Aguilera">
     <span class="selo">PATRÍCIA AGUILERA | NUTRI DE MULHERES COM TAG</span>
     <h1>Como será sua experiência dentro do meu acompanhamento?</h1>
     <p class="texto sub">Um espaço para cuidar da sua alimentação respeitando sua rotina, sua ansiedade e o momento que você está vivendo.</p>
@@ -117,18 +129,23 @@
 </div>
 
 <script>
+const BASE = "https://raw.githubusercontent.com/patyfaguilera/Acompanhamento-nutricional/main/";
+
 const etapas = [
   {
     titulo: "Como será sua experiência dentro do meu acompanhamento?",
     resumo: "",
-    html: `<img src="https://raw.githubusercontent.com/patyfaguilera/Acompanhamento-nutricional/main/aplicativo.jpg.</p>`
+    html: `
+      <img class="imagem" src="${BASE}aplicativo.jpg" alt="Aplicativo">
+      <p>Um espaço para cuidar da sua alimentação respeitando sua rotina, sua ansiedade e o momento que você está vivendo.</p>`
   },
   {
     titulo: "Suas orientações nutricionais",
     resumo: "Tudo o que você precisa colocar em prática, no mesmo lugar.",
     html: `
       <div class="corpo">
-        <img src="https://raw.githubusercontent.com/patyfaguilera/Acompanhamento-nutricional/main/orienta%C3%A7%C3%B5es.jpeg.</p>
+        <img class="imagem" src="${BASE}orienta%C3%A7%C3%B5es.jpeg" alt="Orientações nutricionais">
+        <p>Aqui ficam suas orientações nutricionais e atividades personalizadas, que vamos construindo ao longo do acompanhamento.</p>
         <p>Você terá pequenas estratégias para trabalhar questões como:</p>
         <ul>
           <li>Enjoo e falta de apetite.</li>
@@ -144,7 +161,8 @@ const etapas = [
     resumo: "Um espaço para entender sua relação com a comida.",
     html: `
       <div class="corpo">
-        <img src="https://raw.githubusercontent.com/patyfaguilera/Acompanhamento-nutricional/main/diario%20alimentar.jpg.</p>
+        <img class="imagem" src="${BASE}diario%20alimentar.jpg" alt="Diário alimentar e humor na refeição">
+        <p>No diário alimentar, você poderá registrar suas refeições, compartilhar dificuldades e observar situações que influenciam sua alimentação.</p>
         <div class="destaque">Não é para fiscalizar o que você come ou buscar uma alimentação perfeita, mas para identificar padrões e entender o que podemos melhorar juntas.</div>
       </div>`
   },
@@ -153,8 +171,11 @@ const etapas = [
     resumo: "Porque a vida real não acontece dentro de uma dieta.",
     html: `
       <div class="corpo">
-        <div style="display:flex;gap:12px;margin:0 0 24px;"><img src="https://raw.githubusercontent.com/patyfaguilera/Acompanhamento-nutricional/main/danos2.png?Expires=1793894289&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=Fpy-tbrdSpoHxTFx3S8ic7k5WDFUow8FMLXEZls0ylTwWfPMVSRZM9b0LpoH6zWyaJPiEqzORsNPxaWQ6WysQsGJ3GzWKMWFVZ24s1WkYrVuULueUiQHtp4a9dT6-V~5w4CHp0eOVg7LRLWOSe~y3~GaPMQgmd5YVF0zTsGpyI5ax410v7rTRo2~e1Kb3xHmuScW9FCU4jEUim~NfOTb4BApEna-c~EskcHmwiX5CwhknEOmyZqFQOO88mnwcxeICizCIR42htFkzzKKH-wqSFqywR5Ltnot8i3Ah2E-WWfhc~AJXxtfz0UxArCTUNQv7beXVyObMkxm6-RA~83n0w__" alt="Listas de redução de danos por restaurante" style="width:50%;border-radius:18px;"><img src="https://raw.githubusercontent.com/patyfaguilera/Acompanhamento-nutricional/main/danos1.png?Expires=1793894289&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=pvZLkq5Y5drcPB2KhmQ~BWyMR6b0J3cYutqqpgucSDH5~5ACYpiav32~khV930GdyCLPCnrEI~jEXALrfoKj00Okv17O2c-FqW0GnVPD2~2kHCA-50~JUiKNzpXD-pavT4s3X0OtjZ3TaSRaa1YwPvXf-oXRvKCd13u0npto6nlJTruA2X00tGgE9fp-iPMqczWRTeDgh7kSb1~-fKJVE0CopkJE2q6Us568wY1FKbpQIQ59TCVyXTzGroLttVkOWd5Gca7aojzMv~zmVFASHhi11mX22-sFDNdvLEFjBoSKPeG0-w0UZpxU94MSJs8T1b31-dLSL4cbbJuVBi9oBg__" alt="Listas de redução de danos por situação" style="width:50%;border-radius:18px;"></div>
-<p>Você terá acesso às minhas listas de redução de danos, materiais com estratégias práticas para lidar com situações que podem dificultar sua alimentação.</p>
+        <div class="par-imagens">
+          <img src="${BASE}danos1.png" alt="Listas de redução de danos por restaurante">
+          <img src="${BASE}danos2.png" alt="Listas de redução de danos por situação">
+        </div>
+        <p>Você terá acesso às minhas listas de redução de danos, materiais com estratégias práticas para lidar com situações que podem dificultar sua alimentação.</p>
         <p>Por exemplo:</p>
         <ul>
           <li>O que fazer quando estiver sem apetite.</li>
@@ -170,7 +191,8 @@ const etapas = [
     resumo: "Você não precisa esperar a próxima consulta para falar sobre suas dificuldades.",
     html: `
       <div class="corpo">
-        <img src="https://d31zra5bs5df64.cloudfront.net/prod/3F2zAAtKbcKWNYSQtm8QyKRYL1r/chat/3LYOkZZ0LQ5G6Qmx6S4b8u10cgg/3Lh01dQNFWJ2BxNxuIJpEMfleTM.png?Expires=1793894378&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=E~6pF4Jus~EoLpMiJ4SUI-YgxEQLlo~G1rklVfG0JAnpH9a5AwrbH7TYdZ7OgZ8fssZjbSBPIqXKfayCAT4240G6evI0Nr0qLrTzqJjTkpHk0SFzCtqNR1~CetwYOpIeVp0KJROnmYd4~u7h-5pSSmUooqi3Y64I2btiUWrfotfk6tCOuStP6crkfQJvcxbmw2LFtI78l5rN6Was2alLW91XjAYsqIVfb87tiA77HG7MLkgMNqx-4KAIl8-qMax6H2Z-Ty1z3Pqi0Y1cOkes8dWDA3YQQ71DuS4gn02wA0ndg6-JG2upKMGYqhn3A0xG9Y1Il67gFGLlEfKvn5c6Iw__" alt="Check-in semanal" style="width:100%;max-width:340px;display:block;margin:0 auto 24px;border-radius:18px;"><p>Toda semana, você terá um momento para me contar como foi sua alimentação, o que conseguiu colocar em prática, quais dificuldades apareceram e como está se sentindo.</p>
+        <img class="imagem" src="${BASE}check%20in.png" alt="Check-in semanal">
+        <p>Toda semana, você terá um momento para me contar como foi sua alimentação, o que conseguiu colocar em prática, quais dificuldades apareceram e como está se sentindo.</p>
         <p>Assim, consigo acompanhar sua evolução e ajustar as estratégias quando necessário.</p>
       </div>`
   },
@@ -182,7 +204,7 @@ const etapas = [
         <p>Durante o período contratado, teremos consultas a cada 15 dias, conforme o plano escolhido.</p>
         <p>Nelas, vamos avaliar sua evolução, conversar sobre suas dificuldades e adaptar as estratégias à sua realidade.</p>
         <p>Nessas consultas, caso queira acompanhar a sua evolução física, vamos usar a ajuda da inteligência artificial junto com suas medidas de circunferências (que vou te ensinar a tirar) e fotos suas para estimar seu percentual de gordura e sua massa muscular. Assim conseguimos, além da parte comportamental, avaliar também seus resultados físicos.</p>
-        <img src="https://d31zra5bs5df64.cloudfront.net/prod/3F2zAAtKbcKWNYSQtm8QyKRYL1r/chat/3LYOkZZ0LQ5G6Qmx6S4b8u10cgg/3Lh0RhEuou4tiQNG8nahmeHdBbi.png?Expires=1793894585&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=Hl~fo6yqdkw02aetDSIni0sKur2HNZkGn7Nz4NNV5AWndG4civgTEjg4FObIM6-5bJTqawdqofkagED~7A05na2dHDwxhvmSq-uaNlr~73pE2hEX~VNPvYxhbRwAdNLyddk7jTLHE50JxwPGGhtkjrTEu5BmIcuHd02Z~8juqynZEYeN~Kf4SjSpZJL9~MMLcuALnWn1i4EihhWrWAEmg3GcYvus4MMHaap0JwPCYAsdMyJeb4yLqyXR4f2P7zXAl0x1xWLK5sRJ7OB31T99F1zqcfEtcQL1dcdFlcwdbxgQGsw1wetLEAkP~pS-xIycQfLPd~zVmTzd7Yd287hTFQ__" alt="Composição corporal e índices de avaliação" style="width:100%;max-width:520px;display:block;margin:18px auto 24px;border-radius:18px;">
+        <img class="imagem imagem-grande" src="${BASE}avalia%C3%A7%C3%A3o.png" alt="Composição corporal e índices de avaliação">
         <div class="destaque">Você terá um acompanhamento construído de acordo com suas necessidades, não um plano pronto que precisa seguir perfeitamente.</div>
       </div>`
   },
@@ -289,6 +311,3 @@ document.getElementById('btn-proximo').addEventListener('click', () => { if (atu
 </script>
 </body>
 </html>
-
-
-
